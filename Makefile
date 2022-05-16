@@ -1,3 +1,6 @@
+install:
+	pip install poetry && poetry install
+	
 start:
 	cd src/cisco_ping && \
 		uvicorn app:app --host 0.0.0.0 --port 9000
@@ -20,3 +23,21 @@ show-docker-logs:
 
 terminate-docker:
 	docker ps -q --filter ancestor=cisco_ping | xargs docker rm -f
+
+unit-test:
+	pytest tests/unit -v
+
+unit-test-docker:
+	docker container run cisco_ping:latest pytest tests/unit -v
+
+unit-test-docker-locally:
+	docker container run -v ${PWD}:/app/ cisco_ping:latest pytest tests/unit -v
+
+api-test:
+	pytest tests/api -v
+
+api-test-docker:
+	docker container run cisco_ping:latest pytest tests/api -v
+
+api-test-docker-locally:
+	docker container run -v ${PWD}:/app/ cisco_ping:latest pytest tests/api -v
